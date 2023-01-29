@@ -1,16 +1,10 @@
 package shopee.api.data;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
 public class CouponData implements Serializable
 {
     @Id
@@ -22,4 +16,37 @@ public class CouponData implements Serializable
 
     private float rate;
 
+    public CouponData()
+    {
+    }
+
+    public Long getId()
+    {
+        return id;
+    }
+
+    public void setId( Long id )
+    {
+        this.id = id;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public float getRate()
+    {
+        return rate;
+    }
+
+    public void setRate( float rate )
+    {
+        this.rate = rate;
+    }
 }

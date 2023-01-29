@@ -1,16 +1,10 @@
 package shopee.api.data;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
 public class PaymentData implements Serializable
 {
     @Id
@@ -27,9 +21,82 @@ public class PaymentData implements Serializable
 
     private String cardNumber; // after encrypting
 
-    @MapsId("couponId")
+    @MapsId("couponIndex")
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "couponId", referencedColumnName = "couponId")
+    @JoinColumn(name = "couponIndex", referencedColumnName = "id")
     private PurchasedCouponData purchasedCoupon;
 
+    public PaymentData()
+    {
+    }
+
+    public Long getPaymentId()
+    {
+        return paymentId;
+    }
+
+    public void setPaymentId( Long paymentId )
+    {
+        this.paymentId = paymentId;
+    }
+
+    public String getPaymentReference()
+    {
+        return paymentReference;
+    }
+
+    public void setPaymentReference( String paymentReference )
+    {
+        this.paymentReference = paymentReference;
+    }
+
+    public String getPaymentGateway()
+    {
+        return paymentGateway;
+    }
+
+    public void setPaymentGateway( String paymentGateway )
+    {
+        this.paymentGateway = paymentGateway;
+    }
+
+    public double getPaymentAmount()
+    {
+        return paymentAmount;
+    }
+
+    public void setPaymentAmount( double paymentAmount )
+    {
+        this.paymentAmount = paymentAmount;
+    }
+
+    public String getTransactionReference()
+    {
+        return transactionReference;
+    }
+
+    public void setTransactionReference( String transactionReference )
+    {
+        this.transactionReference = transactionReference;
+    }
+
+    public String getCardNumber()
+    {
+        return cardNumber;
+    }
+
+    public void setCardNumber( String cardNumber )
+    {
+        this.cardNumber = cardNumber;
+    }
+
+    public PurchasedCouponData getPurchasedCoupon()
+    {
+        return purchasedCoupon;
+    }
+
+    public void setPurchasedCoupon( PurchasedCouponData purchasedCoupon )
+    {
+        this.purchasedCoupon = purchasedCoupon;
+    }
 }

@@ -2,28 +2,106 @@ package shopee.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import shopee.api.data.ProfileData;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import shopee.api.library.Profile;
 import shopee.api.service.impl.AdminServiceImpl;
+import shopee.api.util.APIError;
+
+import static shopee.api.util.HeaderUtil.getResponseHeaders;
 
 @RestController
+//@Scope("admin-service")
 public class AdminServiceController
 {
     @Autowired
     private AdminServiceImpl adminService;
 
-    @GetMapping( "/user-profiles/{profileId}" )
-    public ProfileData getProfileById( @PathVariable( name = "profileId", required = true ) Long profileId )
+    @RequestMapping( value = "/user-profiles/{profileId}", method = RequestMethod.GET, headers = "Accept=application/json" )
+    public ResponseEntity<APIError<Profile>> getProfileById( @PathVariable( name = "profileId" ) Long profileId )
     {
-        return adminService.getDetailUserProfile( profileId );
+        APIError<Profile> profileData = adminService.getDetailUserProfile( profileId );
+        if( profileData._isSuccess() )
+        {
+            return ResponseEntity.
+                           status( HttpStatus.OK ).
+                           headers( getResponseHeaders() ).
+                           body( profileData );
+        }
+        else
+        {
+            return ResponseEntity.
+                           status( HttpStatus.NOT_FOUND ).
+                           headers( getResponseHeaders() ).
+                           body( profileData );
+        }
     }
 
-    @GetMapping( "/greeting" )
-    public String greeting( @RequestParam( name = "name", required = false, defaultValue = "World" ) String name )
+    @RequestMapping( value = "/user-profiles", method = RequestMethod.POST, headers = "Accept=application/json" )
+    public ResponseEntity<APIError<Profile>> addNewProfile( @RequestBody Profile profile )
     {
-        return "greetings";
+        APIError<Profile> newProfile = adminService.addNewProfile( profile );
+
+        if( newProfile._isSuccess() )
+        {
+            return ResponseEntity.
+                           status( HttpStatus.CREATED ).
+                           headers( getResponseHeaders() ).
+                           body( newProfile );
+        }
+        else
+        {
+            return ResponseEntity.
+                           status( HttpStatus.INTERNAL_SERVER_ERROR ).
+                           headers( getResponseHeaders() ).
+                           body( newProfile );
+        }
+
+
+    }
+
+    @RequestMapping( value = "/user-profiles/{profileId}", method = RequestMethod.PUT, headers = "Accept=application/json" )
+    public ResponseEntity<APIError<Profile>> updateProfile( @RequestBody Profile profile, @PathVariable( name = "profileId" ) Long profileId )
+    {
+        APIError<Profile> newProfile = adminService.updateProfile( profile, profileId );
+
+        if( newProfile._isSuccess() )
+        {
+            return ResponseEntity.
+                           status( HttpStatus.CREATED ).
+                           headers( getResponseHeaders() ).
+                           body( newProfile );
+        }
+        else
+        {
+            return ResponseEntity.
+                           status( HttpStatus.INTERNAL_SERVER_ERROR ).
+                           headers( getResponseHeaders() ).
+                           body( newProfile );
+        }
+
+    }
+
+    @RequestMapping( value = "/user-profiles/{profileId}", method = RequestMethod.DELETE, headers = "Accept=application/json" )
+    public ResponseEntity<APIError> deleteProfile( @PathVariable( name = "profileId" ) Long profileId )
+    {
+        APIError error = adminService.deleteProfile( profileId );
+
+        if( error._isSuccess() )
+        {
+            return ResponseEntity.
+                           status( HttpStatus.OK ).
+                           headers( getResponseHeaders() ).
+                           body( error );
+        }
+        else
+        {
+            return ResponseEntity.
+                           status( HttpStatus.INTERNAL_SERVER_ERROR ).
+                           headers( getResponseHeaders() ).
+                           body( error );
+        }
+
     }
 }

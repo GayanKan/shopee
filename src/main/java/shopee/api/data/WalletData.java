@@ -1,15 +1,9 @@
 package shopee.api.data;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
 public class WalletData implements Serializable
 {
     @Id
@@ -20,4 +14,40 @@ public class WalletData implements Serializable
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profileId", referencedColumnName = "profileId")
     private ProfileData partnerProfile;
+
+    private double balance;
+
+    public WalletData()
+    {
+    }
+
+    public Long getWalletId()
+    {
+        return walletId;
+    }
+
+    public void setWalletId( Long walletId )
+    {
+        this.walletId = walletId;
+    }
+
+    public ProfileData getPartnerProfile()
+    {
+        return partnerProfile;
+    }
+
+    public void setPartnerProfile( ProfileData partnerProfile )
+    {
+        this.partnerProfile = partnerProfile;
+    }
+
+    public double getBalance()
+    {
+        return balance;
+    }
+
+    public void setBalance( double balance )
+    {
+        this.balance = balance;
+    }
 }

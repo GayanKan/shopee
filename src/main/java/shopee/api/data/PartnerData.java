@@ -1,16 +1,10 @@
 package shopee.api.data;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
 public class PartnerData implements Serializable
 {
     @Id
@@ -31,6 +25,58 @@ public class PartnerData implements Serializable
     @JoinColumn( name = "profileId", referencedColumnName = "profileId" )
     private ProfileData partnerProfile;
 
+    public PartnerData()
+    {
+    }
 
+    public Long getId()
+    {
+        return Id;
+    }
+
+    public void setId( Long id )
+    {
+        Id = id;
+    }
+
+    public String getLegalName()
+    {
+        return legalName;
+    }
+
+    public void setLegalName( String legalName )
+    {
+        this.legalName = legalName;
+    }
+
+    public String getMarketingName()
+    {
+        return marketingName;
+    }
+
+    public void setMarketingName( String marketingName )
+    {
+        this.marketingName = marketingName;
+    }
+
+    public String getAddress()
+    {
+        return address;
+    }
+
+    public void setAddress( String address )
+    {
+        this.address = address;
+    }
+
+    public ProfileData getPartnerProfile()
+    {
+        return partnerProfile;
+    }
+
+    public void setPartnerProfile( ProfileData partnerProfile )
+    {
+        this.partnerProfile = partnerProfile;
+    }
 }
 
