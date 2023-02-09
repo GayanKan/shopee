@@ -1,0 +1,30 @@
+{
+  "no": 0,
+  "data": [
+    {
+      "id": 1,
+      "name": "Ten Euro",
+      "rate": 10,
+      "termsAndConditions": "Test Terms and Conditions"
+    },
+    {
+      "id": 2,
+      "name": "Twenty Euro",
+      "rate": 20,
+      "termsAndConditions": "Test Terms and Conditions"
+    },
+    {
+      "id": 3,
+      "name": "Fifty Euro",
+      "rate": 50,
+      "termsAndConditions": "Test Terms and Conditions"
+    },
+    {
+      "id": 4,
+      "name": "Hundred Euro",
+      "rate": 100,
+      "termsAndConditions": "Test Terms and Conditions"
+    }
+  ],
+  "msg": "Success"
+}

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shopee.api.library.LoginDetail;
 import shopee.api.library.Profile;
 import shopee.api.mapper.DataMapper;
 import shopee.api.repository.ProfileRepository;
@@ -53,5 +54,13 @@ public class AdminServiceImpl implements IAdminService
     public APIError deleteProfile( Long profileId )
     {
         return null;
+    }
+
+    @Override
+    public APIError login( LoginDetail loginDetail, String actions )
+    {
+        APIError apiError = new APIError(APIError.SUCCESS, new Object(), "Login Success");
+
+        return apiError;
     }
 }

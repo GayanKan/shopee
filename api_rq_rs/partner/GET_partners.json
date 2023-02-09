@@ -1,0 +1,42 @@
+{
+  "no": 0,
+  "data": [
+    {
+      "legalName": "K-Market",
+      "marketingName": "K-Market",
+      "address": "K-Market Turku",
+      "partnerProfile": {
+        "profileId": 1000,
+        "firstName": "K Market",
+        "lastName": "K-Market Oy",
+        "age": 30,
+        "userName": "kmarket",
+        "userAuthKey": null,
+        "email": "test@shoppe.com",
+        "mobileNumber": "+358 41 567 987",
+        "language": "fi",
+        "category": "PARTNER"
+      },
+      "id": 100
+    },
+    {
+      "legalName": "S-Market",
+      "marketingName": "S-Market",
+      "address": "S-Market Turku",
+      "partnerProfile": {
+        "profileId": 1001,
+        "firstName": "S Market",
+        "lastName": "S-Market Oy",
+        "age": 30,
+        "userName": "smarket",
+        "userAuthKey": null,
+        "email": "test1@shoppe.com",
+        "mobileNumber": "+358 41 567 000",
+        "language": "fi",
+        "category": "PARTNER"
+      },
+      "id": 101
+    }
+  ],
+  "msg": "Success"
+}

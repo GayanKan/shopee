@@ -15,7 +15,8 @@ import java.util.List;
 import static shopee.api.util.HeaderUtil.getResponseHeaders;
 
 @RestController
-public class PurchaseService
+@RequestMapping("purchase-service")
+public class PurchaseServiceController
 {
     @Autowired
     PurchaseServiceImpl purchaseService;

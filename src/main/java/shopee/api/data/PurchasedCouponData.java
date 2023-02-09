@@ -19,7 +19,6 @@ public class PurchasedCouponData implements Serializable
     @Column( nullable = false )
     private Date purchacedDate;
 
-    @Column( nullable = false )
     private Date paidDate;
 
     @Column( nullable = false )
@@ -27,22 +26,22 @@ public class PurchasedCouponData implements Serializable
     private float discountPercentage;
 
     // FK with User Profile M:1
-    @MapsId( "profileId" )
+    @MapsId( "walletId" )
     @ManyToOne( cascade = CascadeType.ALL )
-    @JoinColumn( name = "profileId", referencedColumnName = "profileId" )
-    private ProfileData partnerProfile;
+    @JoinColumn( name = "walletId", referencedColumnName = "walletId" )
+    private WalletData walletData;
 
     @MapsId( "couponId" )
     @ManyToOne( cascade = CascadeType.ALL )
     @JoinColumn( name = "couponId", referencedColumnName = "id" )
     private CouponData coupon;
 
-    @MapsId( "paymentId" )
-    @OneToOne( cascade = CascadeType.ALL )
-    @JoinColumn( name = "paymentId", referencedColumnName = "paymentId" )
-    private PaymentData couponPayment;
-
     private boolean valid;
+
+    private String qrCode;
+
+    private String currency;
+
 
     public PurchasedCouponData()
     {
@@ -118,14 +117,24 @@ public class PurchasedCouponData implements Serializable
         this.discountPercentage = discountPercentage;
     }
 
-    public ProfileData getPartnerProfile()
+    public WalletData getWalletData()
     {
-        return partnerProfile;
+        return walletData;
     }
 
-    public void setPartnerProfile( ProfileData partnerProfile )
+    public void setWalletData( WalletData walletData )
     {
-        this.partnerProfile = partnerProfile;
+        this.walletData = walletData;
+    }
+
+    public String getQrCode()
+    {
+        return qrCode;
+    }
+
+    public void setQrCode( String qrCode )
+    {
+        this.qrCode = qrCode;
     }
 
     public CouponData getCoupon()
@@ -136,16 +145,6 @@ public class PurchasedCouponData implements Serializable
     public void setCoupon( CouponData coupon )
     {
         this.coupon = coupon;
-    }
-
-    public PaymentData getCouponPayment()
-    {
-        return couponPayment;
-    }
-
-    public void setCouponPayment( PaymentData couponPayment )
-    {
-        this.couponPayment = couponPayment;
     }
 
     public boolean isValid()
