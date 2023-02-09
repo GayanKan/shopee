@@ -44,6 +44,8 @@ public class PurchasedCouponData implements Serializable
 
     private boolean valid;
 
+    private String qrCode;
+
     public PurchasedCouponData()
     {
     }

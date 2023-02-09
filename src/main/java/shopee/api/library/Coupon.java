@@ -10,9 +10,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
-@NoArgsConstructor
 public class Coupon implements Serializable
 {
     private Long id;
@@ -20,4 +17,47 @@ public class Coupon implements Serializable
     private double rate;
     private String termsAndConditions;
 
+    public Coupon()
+    {
+    }
+
+    public Long getId()
+    {
+        return id;
+    }
+
+    public void setId( Long id )
+    {
+        this.id = id;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public double getRate()
+    {
+        return rate;
+    }
+
+    public void setRate( double rate )
+    {
+        this.rate = rate;
+    }
+
+    public String getTermsAndConditions()
+    {
+        return termsAndConditions;
+    }
+
+    public void setTermsAndConditions( String termsAndConditions )
+    {
+        this.termsAndConditions = termsAndConditions;
+    }
 }

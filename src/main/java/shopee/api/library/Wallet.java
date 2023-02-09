@@ -8,9 +8,6 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
 public class Wallet implements Serializable
 {
     private Long walletId;
@@ -18,4 +15,38 @@ public class Wallet implements Serializable
     private double balance;
 
     private List<PurchasedCoupon> purchasedCouponList;
+
+    public Wallet()
+    {
+    }
+
+    public Long getWalletId()
+    {
+        return walletId;
+    }
+
+    public void setWalletId( Long walletId )
+    {
+        this.walletId = walletId;
+    }
+
+    public double getBalance()
+    {
+        return balance;
+    }
+
+    public void setBalance( double balance )
+    {
+        this.balance = balance;
+    }
+
+    public List<PurchasedCoupon> getPurchasedCouponList()
+    {
+        return purchasedCouponList;
+    }
+
+    public void setPurchasedCouponList( List<PurchasedCoupon> purchasedCouponList )
+    {
+        this.purchasedCouponList = purchasedCouponList;
+    }
 }
