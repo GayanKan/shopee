@@ -1,0 +1,12 @@
+{
+  "profileId": 1000,
+  "firstName": "K Market",
+  "lastName": "K-Market Oy",
+  "age": 30,
+  "userName": "kmarket",
+  "userAuthKey": null,
+  "email": "test@shoppe.com",
+  "mobileNumber": "+358 41 567 987",
+  "language": "fi",
+  "category": "PARTNER"
+}

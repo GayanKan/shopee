@@ -21,9 +21,9 @@ public class PaymentData implements Serializable
 
     private String cardNumber; // after encrypting
 
-    @MapsId("couponIndex")
+    @MapsId("purchasedCouponId")
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "couponIndex", referencedColumnName = "id")
+    @JoinColumn(name = "purchasedCouponId", referencedColumnName = "id")
     private PurchasedCouponData purchasedCoupon;
 
     public PaymentData()

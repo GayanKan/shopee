@@ -1,5 +1,6 @@
 package shopee.api.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -10,17 +11,19 @@ import shopee.api.library.Profile;
 import shopee.api.service.impl.AdminServiceImpl;
 import shopee.api.util.APIError;
 
+import java.rmi.RemoteException;
+
 import static shopee.api.util.HeaderUtil.getResponseHeaders;
 
 @RestController
-//@Scope("admin-service")
+@RequestMapping("admin-service")
 public class AdminServiceController
 {
     @Autowired
     private AdminServiceImpl adminService;
 
-    @RequestMapping( value = "/setup/user-profiles/{profileId}", method = RequestMethod.GET, headers = "Accept=application/json" )
-    public ResponseEntity<APIError<Profile>> getProfileById( @PathVariable( name = "profileId" ) Long profileId )
+    @RequestMapping( value = "/setup/user-profiles/{profileId}", method = RequestMethod.GET, headers = "Accept=application/json", produces = "application/json")
+    public ResponseEntity<APIError<Profile>> getProfileById( @PathVariable( name = "profileId" ) Long profileId ) throws RemoteException
     {
         APIError<Profile> profileData = adminService.getDetailUserProfile( profileId );
         if( profileData._isSuccess() )
@@ -62,7 +65,7 @@ public class AdminServiceController
 
     }
     @RequestMapping( value = "/auth/user-logins", method = RequestMethod.POST, headers = "Accept=application/json" )
-    public ResponseEntity<APIError> userLogin( @RequestBody LoginDetail loginDetail, @RequestParam String actions )
+    public ResponseEntity<APIError> userLogin( @RequestBody LoginDetail loginDetail, @Parameter(description = "actions", required = true) @RequestParam String actions )
     {
         // from actions need to send followings -> LOG_OUT for logout, FORGOT for forget password
         APIError loginMsg = adminService.login( loginDetail, actions );

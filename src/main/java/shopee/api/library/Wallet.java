@@ -14,7 +14,7 @@ public class Wallet implements Serializable
 
     private double balance;
 
-    private List<PurchasedCoupon> purchasedCouponList;
+    private List<PurchasedCoupon> purchasedCoupons;
 
     public Wallet()
     {
@@ -40,13 +40,13 @@ public class Wallet implements Serializable
         this.balance = balance;
     }
 
-    public List<PurchasedCoupon> getPurchasedCouponList()
+    public List<PurchasedCoupon> getPurchasedCoupons()
     {
-        return purchasedCouponList;
+        return purchasedCoupons;
     }
 
-    public void setPurchasedCouponList( List<PurchasedCoupon> purchasedCouponList )
+    public void setPurchasedCoupons( List<PurchasedCoupon> purchasedCoupons )
     {
-        this.purchasedCouponList = purchasedCouponList;
+        this.purchasedCoupons = purchasedCoupons;
     }
 }

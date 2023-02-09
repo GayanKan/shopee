@@ -18,7 +18,7 @@ public class ProfileData implements Serializable
 
     @Column( nullable = false )
     private int age;
-    @Column( nullable = false )
+    @Column( nullable = false, unique = true)
     private String userName;
     @Column( unique = true )
     private String email;

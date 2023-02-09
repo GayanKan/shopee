@@ -14,6 +14,7 @@ import java.util.List;
 import static shopee.api.util.HeaderUtil.getResponseHeaders;
 
 @RestController
+@RequestMapping("setup-service")
 public class SetupServiceController
 {
     @Autowired

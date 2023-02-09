@@ -1,8 +1,11 @@
 package shopee.api.data;
 
 import jakarta.persistence.*;
+import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 
 import java.io.Serializable;
+import java.util.List;
+
 @Entity
 public class WalletData implements Serializable
 {
@@ -15,7 +18,14 @@ public class WalletData implements Serializable
     @JoinColumn(name = "profileId", referencedColumnName = "profileId")
     private ProfileData partnerProfile;
 
+    @MapsId("walletId")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "walletId", referencedColumnName = "walletId")
+    private List<PurchasedCouponData> purchasedCouponData;
+
     private double balance;
+
+    private String currency;
 
     public WalletData()
     {
@@ -49,5 +59,25 @@ public class WalletData implements Serializable
     public void setBalance( double balance )
     {
         this.balance = balance;
+    }
+
+    public String getCurrency()
+    {
+        return currency;
+    }
+
+    public void setCurrency( String currency )
+    {
+        this.currency = currency;
+    }
+
+    public List<PurchasedCouponData> getPurchasedCouponData()
+    {
+        return purchasedCouponData;
+    }
+
+    public void setPurchasedCouponData( List<PurchasedCouponData> purchasedCouponData )
+    {
+        this.purchasedCouponData = purchasedCouponData;
     }
 }

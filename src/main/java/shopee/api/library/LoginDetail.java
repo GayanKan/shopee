@@ -9,7 +9,7 @@ public class LoginDetail implements Serializable
 {
     private String username;
     private String password;
-    private boolean confirmationCode; // for forgot password
+    private String  confirmationCode; // for forgot password
 
     public LoginDetail()
     {
@@ -35,12 +35,12 @@ public class LoginDetail implements Serializable
         this.password = password;
     }
 
-    public boolean isConfirmationCode()
+    public String isConfirmationCode()
     {
         return confirmationCode;
     }
 
-    public void setConfirmationCode( boolean confirmationCode )
+    public void setConfirmationCode( String confirmationCode )
     {
         this.confirmationCode = confirmationCode;
     }

@@ -1,8 +1,5 @@
 package shopee.api.library;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -23,8 +20,6 @@ public class PurchasedCoupon implements Serializable
     private double discountPercentage;
 
     private Coupon coupon;
-
-    private Payment couponPayment;
 
     private boolean valid;
 
@@ -112,16 +107,6 @@ public class PurchasedCoupon implements Serializable
     public void setCoupon( Coupon coupon )
     {
         this.coupon = coupon;
-    }
-
-    public Payment getCouponPayment()
-    {
-        return couponPayment;
-    }
-
-    public void setCouponPayment( Payment couponPayment )
-    {
-        this.couponPayment = couponPayment;
     }
 
     public boolean isValid()
