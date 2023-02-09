@@ -1,0 +1,44 @@
+{
+  "no": 0,
+  "data": {
+    "walletId": 1,
+    "balance": 100,
+    "purchasedCoupons": [
+      {
+        "id": 1,
+        "discountRate": 0,
+        "expiryDate": "2023-12-31",
+        "purchasedDate": "2023-01-01",
+        "paidDate": null,
+        "paid": false,
+        "discountPercentage": 10,
+        "coupon": {
+          "id": 2,
+          "name": "Twenty Euro",
+          "rate": 20,
+          "termsAndConditions": "Test Terms and Conditions"
+        },
+        "valid": true,
+        "qrCode": "123456"
+      },
+      {
+        "id": 2,
+        "discountRate": 0,
+        "expiryDate": "2023-11-30",
+        "purchasedDate": "2023-02-01",
+        "paidDate": null,
+        "paid": false,
+        "discountPercentage": 10,
+        "coupon": {
+          "id": 3,
+          "name": "Fifty Euro",
+          "rate": 50,
+          "termsAndConditions": "Test Terms and Conditions"
+        },
+        "valid": true,
+        "qrCode": "123456"
+      }
+    ]
+  },
+  "msg": "Success"
+}

@@ -25,6 +25,8 @@ public class Profile implements Serializable
     // Returns Enums of @ProfileCategory
     private String category; // can be a customer, partner, admin user
 
+    private Long walletId;
+
     public Profile()
     {
     }
@@ -127,6 +129,16 @@ public class Profile implements Serializable
     public void setCategory( String category )
     {
         this.category = category;
+    }
+
+    public Long getWalletId()
+    {
+        return walletId;
+    }
+
+    public void setWalletId( Long walletId )
+    {
+        this.walletId = walletId;
     }
 }
 

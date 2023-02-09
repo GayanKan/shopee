@@ -12,7 +12,7 @@ public class PurchasedCoupon implements Serializable
 
     private Date expiryDate;
 
-    private Date purchacedDate;
+    private Date purchasedDate;
 
     private Date paidDate;
 
@@ -59,14 +59,14 @@ public class PurchasedCoupon implements Serializable
         this.expiryDate = expiryDate;
     }
 
-    public Date getPurchacedDate()
+    public Date getPurchasedDate()
     {
-        return purchacedDate;
+        return purchasedDate;
     }
 
-    public void setPurchacedDate( Date purchacedDate )
+    public void setPurchasedDate( Date purchasedDate )
     {
-        this.purchacedDate = purchacedDate;
+        this.purchasedDate = purchasedDate;
     }
 
     public Date getPaidDate()

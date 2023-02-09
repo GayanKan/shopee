@@ -16,6 +16,8 @@ public class CouponData implements Serializable
 
     private float rate;
 
+    private String termsAndConditions;
+
     public CouponData()
     {
     }
@@ -48,5 +50,15 @@ public class CouponData implements Serializable
     public void setRate( float rate )
     {
         this.rate = rate;
+    }
+
+    public String getTermsAndConditions()
+    {
+        return termsAndConditions;
+    }
+
+    public void setTermsAndConditions( String termsAndConditions )
+    {
+        this.termsAndConditions = termsAndConditions;
     }
 }
