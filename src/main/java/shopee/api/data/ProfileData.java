@@ -20,6 +20,9 @@ public class ProfileData implements Serializable
     private int age;
     @Column( nullable = false, unique = true)
     private String userName;
+
+    @Column( nullable = false )
+    private String userAuthKey;
     @Column( unique = true )
     private String email;
     @Column( unique = true )
@@ -84,6 +87,16 @@ public class ProfileData implements Serializable
     public void setUserName( String userName )
     {
         this.userName = userName;
+    }
+
+    public String getUserAuthKey()
+    {
+        return userAuthKey;
+    }
+
+    public void setUserAuthKey( String userAuthKey )
+    {
+        this.userAuthKey = userAuthKey;
     }
 
     public String getEmail()

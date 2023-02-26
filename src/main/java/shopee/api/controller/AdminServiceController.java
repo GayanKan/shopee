@@ -10,7 +10,7 @@ import shopee.api.library.LoginDetail;
 import shopee.api.library.Profile;
 import shopee.api.service.impl.AdminServiceImpl;
 import shopee.api.util.APIError;
-import shopee.api.util.Payload;
+import shopee.api.util.RequestWrapper;
 
 import java.rmi.RemoteException;
 
@@ -44,9 +44,9 @@ public class AdminServiceController
     }
 
     @RequestMapping( value = "/setup/user-profiles", method = RequestMethod.POST, headers = "Accept=application/json" )
-    public ResponseEntity<APIError<Profile>> addNewProfile( @RequestBody Profile profile )
+    public ResponseEntity<APIError<Profile>> addNewProfile( @RequestBody RequestWrapper<Profile> profile )
     {
-        APIError<Profile> newProfile = adminService.addNewProfile( profile );
+        APIError<Profile> newProfile = adminService.addNewProfile( profile.getPayload() );
 
         if( newProfile._isSuccess() )
         {
@@ -66,7 +66,7 @@ public class AdminServiceController
 
     }
     @RequestMapping( value = "/auth/user-logins", method = RequestMethod.POST, headers = "Accept=application/json" )
-    public ResponseEntity<APIError> userLogin( @RequestBody Payload<LoginDetail> loginDetail, @Parameter(description = "actions", required = true) @RequestParam String actions )
+    public ResponseEntity<APIError> userLogin( @RequestBody RequestWrapper<LoginDetail> loginDetail, @Parameter(description = "actions", required = true) @RequestParam String actions )
     {
         // from actions need to send followings -> LOG_OUT for logout, FORGOT for forget password
         APIError loginMsg = adminService.login( ( LoginDetail ) loginDetail.getPayload(), actions );
@@ -89,9 +89,9 @@ public class AdminServiceController
     }
 
     @RequestMapping( value = "/setup/user-profiles/{profileId}", method = RequestMethod.PUT, headers = "Accept=application/json" )
-    public ResponseEntity<APIError<Profile>> updateProfile( @RequestBody Profile profile, @PathVariable( name = "profileId" ) Long profileId )
+    public ResponseEntity<APIError<Profile>> updateProfile( @RequestBody RequestWrapper<Profile> profile, @PathVariable( name = "profileId" ) Long profileId )
     {
-        APIError<Profile> newProfile = adminService.updateProfile( profile, profileId );
+        APIError<Profile> newProfile = adminService.updateProfile( profile.getPayload(), profileId );
 
         if( newProfile._isSuccess() )
         {

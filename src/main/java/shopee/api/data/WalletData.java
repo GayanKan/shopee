@@ -13,6 +13,8 @@ public class WalletData implements Serializable
     @GeneratedValue
     private Long walletId;
 
+    private Long profileId;
+
     @MapsId("profileId")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profileId", referencedColumnName = "profileId")
@@ -39,6 +41,16 @@ public class WalletData implements Serializable
     public void setWalletId( Long walletId )
     {
         this.walletId = walletId;
+    }
+
+    public Long getProfileId()
+    {
+        return profileId;
+    }
+
+    public void setProfileId( Long profileId )
+    {
+        this.profileId = profileId;
     }
 
     public ProfileData getPartnerProfile()

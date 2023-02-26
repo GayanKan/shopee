@@ -1,6 +1,8 @@
 package shopee.api.util;
 
-public class APIError<T>
+import java.io.Serializable;
+
+public class APIError<T> implements Serializable
 {
     public static int SUCCESS = 0;
     public static int WARNING = -1;
@@ -13,6 +15,12 @@ public class APIError<T>
 
     public APIError()
     {
+    }
+
+    public APIError( int no, String msg )
+    {
+        this.no = no;
+        this.msg = msg;
     }
 
     public APIError( int index, Object data, String errorMsg )

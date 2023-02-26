@@ -10,7 +10,7 @@ import shopee.api.library.PurchasedCoupon;
 import shopee.api.library.Wallet;
 import shopee.api.service.impl.PurchaseServiceImpl;
 import shopee.api.util.APIError;
-import shopee.api.util.Payload;
+import shopee.api.util.RequestWrapper;
 
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class PurchaseServiceController
     }
 
     @RequestMapping( value = "/wallet/{walletId}/coupons", method = RequestMethod.POST, headers = "Accept=application/json" )
-    public ResponseEntity<APIError<Wallet>> addNewCoupon( @RequestBody Payload<PurchasedCoupon> coupon, @PathVariable( name = "walletId" ) Long walletId )
+    public ResponseEntity<APIError<Wallet>> addNewCoupon( @RequestBody RequestWrapper<PurchasedCoupon> coupon, @PathVariable( name = "walletId" ) Long walletId )
     {
         APIError<Wallet> wallet = purchaseService.purchaseCoupon( ( PurchasedCoupon ) coupon.getPayload(), walletId );
         if( wallet._isSuccess() )
@@ -83,7 +83,7 @@ public class PurchaseServiceController
     }
 
     @RequestMapping( value = "/wallet/{walletId}/coupons/{couponId}", method = RequestMethod.PUT, headers = "Accept=application/json" )
-    public ResponseEntity<APIError<Wallet>> updateCoupon( @RequestBody Payload<PurchasedCoupon> coupon, @PathVariable( name = "walletId" ) Long walletId, @PathVariable( name = "couponId" ) Long couponId )
+    public ResponseEntity<APIError<Wallet>> updateCoupon( @RequestBody RequestWrapper<PurchasedCoupon> coupon, @PathVariable( name = "walletId" ) Long walletId, @PathVariable( name = "couponId" ) Long couponId )
     {
         APIError<Wallet> wallet = purchaseService.updateCoupon( ( PurchasedCoupon ) coupon.getPayload(), walletId, couponId );
         if( wallet._isSuccess() )

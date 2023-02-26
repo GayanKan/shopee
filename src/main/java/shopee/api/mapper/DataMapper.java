@@ -14,6 +14,8 @@ public abstract class DataMapper
     public static DataMapper dataMapper = Mappers.getMapper( DataMapper.class );
 
     public abstract Profile mapProfile( ProfileData profileData );
+    @InheritInverseConfiguration
+    public abstract ProfileData mapProfileDTOToDAO( Profile profileData );
 
     public abstract List<Profile> mapProfiles( List<ProfileData> profileDataList);
 
