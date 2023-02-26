@@ -14,7 +14,11 @@ public class CouponData implements Serializable
     @Column( nullable = false )
     private String name;
 
+    @Column( nullable = false )
     private float rate;
+
+    @Column( nullable = false )
+    private String currency;
 
     private String termsAndConditions;
 

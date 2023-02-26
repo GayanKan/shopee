@@ -1,5 +1,6 @@
 package shopee.api.service;
 
+import shopee.api.library.Payment;
 import shopee.api.library.PurchaseCouponSummary;
 import shopee.api.library.PurchasedCoupon;
 import shopee.api.library.Wallet;
@@ -18,4 +19,8 @@ public interface IPurchaseService
     APIError<Wallet> deleteCoupon( Long walletId, Long couponId );
 
     APIError<List<PurchaseCouponSummary>> getDetailPartnerPurchases( Long partnerId );
+
+    public APIError<Payment> getDetailCouponPayments( Long walletId, Long purchasedCouponId );
+
+    public APIError<PurchasedCoupon> getPurchaseCouponDetail( Long walletId, Long couponId );
 }

@@ -10,6 +10,7 @@ import shopee.api.library.LoginDetail;
 import shopee.api.library.Profile;
 import shopee.api.service.impl.AdminServiceImpl;
 import shopee.api.util.APIError;
+import shopee.api.util.Payload;
 
 import java.rmi.RemoteException;
 
@@ -65,10 +66,10 @@ public class AdminServiceController
 
     }
     @RequestMapping( value = "/auth/user-logins", method = RequestMethod.POST, headers = "Accept=application/json" )
-    public ResponseEntity<APIError> userLogin( @RequestBody LoginDetail loginDetail, @Parameter(description = "actions", required = true) @RequestParam String actions )
+    public ResponseEntity<APIError> userLogin( @RequestBody Payload<LoginDetail> loginDetail, @Parameter(description = "actions", required = true) @RequestParam String actions )
     {
         // from actions need to send followings -> LOG_OUT for logout, FORGOT for forget password
-        APIError loginMsg = adminService.login( loginDetail, actions );
+        APIError loginMsg = adminService.login( ( LoginDetail ) loginDetail.getPayload(), actions );
 
         if( loginMsg._isSuccess() )
         {

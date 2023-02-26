@@ -1,5 +1,8 @@
 {
-  "username" : "",
-  "password" : "",
-  "confirmationCode" : ""
+  "payload":
+  {
+    "username": "",
+    "password": "",
+    "confirmationCode": ""
+  }
 }

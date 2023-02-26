@@ -1,7 +1,7 @@
-INSERT INTO COUPON_DATA VALUES(1, 'Ten Euro', 10, 'Test Terms and Conditions' );
-INSERT INTO COUPON_DATA VALUES(2, 'Twenty Euro', 20,'Test Terms and Conditions' );
-INSERT INTO COUPON_DATA VALUES(3, 'Fifty Euro', 50, 'Test Terms and Conditions' );
-INSERT INTO COUPON_DATA VALUES(4, 'Hundred Euro', 100, 'Test Terms and Conditions' );
+INSERT INTO COUPON_DATA (ID, NAME, RATE, TERMS_AND_CONDITIONS, CURRENCY) VALUES(1, 'Ten Euro', 10, 'Test Terms and Conditions' , 'EUR');
+INSERT INTO COUPON_DATA (ID, NAME, RATE, TERMS_AND_CONDITIONS, CURRENCY) VALUES (2, 'Twenty Euro', 20,'Test Terms and Conditions', 'EUR' );
+INSERT INTO COUPON_DATA (ID, NAME, RATE, TERMS_AND_CONDITIONS, CURRENCY) VALUES (3, 'Fifty Euro', 50, 'Test Terms and Conditions' , 'EUR');
+INSERT INTO COUPON_DATA (ID, NAME, RATE, TERMS_AND_CONDITIONS, CURRENCY) VALUES (4, 'Hundred Euro', 100, 'Test Terms and Conditions', 'EUR' );
 commit;
 
 INSERT INTO PROFILE_DATA  (PROFILE_ID, AGE, CATEGORY, EMAIL, FIRST_NAME, LANGUAGE, LAST_NAME, MOBILE_NUMBER, USER_NAME) values (1000, 30, 'PARTNER', 'test@shoppe.com', 'K Market', 'fi', 'K-Market Oy' , '+358 41 567 987', 'kmarket');

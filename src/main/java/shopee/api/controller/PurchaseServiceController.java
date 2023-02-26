@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import shopee.api.library.Payment;
 import shopee.api.library.PurchaseCouponSummary;
 import shopee.api.library.PurchasedCoupon;
 import shopee.api.library.Wallet;
 import shopee.api.service.impl.PurchaseServiceImpl;
 import shopee.api.util.APIError;
+import shopee.api.util.Payload;
 
 import java.util.List;
 
@@ -40,10 +42,30 @@ public class PurchaseServiceController
         }
     }
 
-    @RequestMapping( value = "/wallet/{walletId}/coupons", method = RequestMethod.POST, headers = "Accept=application/json" )
-    public ResponseEntity<APIError<Wallet>> addNewCoupon( @RequestBody PurchasedCoupon coupon, @PathVariable( name = "walletId" ) Long walletId )
+    @RequestMapping( value = "/wallet/{walletId}/coupons/{couponId}", method = RequestMethod.GET, headers = "Accept=application/json" )
+    public ResponseEntity<APIError<PurchasedCoupon>> getCouponDetail(  @PathVariable( name = "walletId" ) Long walletId, @PathVariable( name = "couponId" ) Long couponId )
     {
-        APIError<Wallet> wallet = purchaseService.purchaseCoupon( coupon, walletId );
+        APIError<PurchasedCoupon> purchaseCouponDetail = purchaseService.getPurchaseCouponDetail( walletId, couponId );
+        if( purchaseCouponDetail._isSuccess() )
+        {
+            return ResponseEntity.
+                           status( HttpStatus.OK ).
+                           headers( getResponseHeaders() ).
+                           body( purchaseCouponDetail );
+        }
+        else
+        {
+            return ResponseEntity.
+                           status( HttpStatus.NOT_FOUND ).
+                           headers( getResponseHeaders() ).
+                           body( purchaseCouponDetail );
+        }
+    }
+
+    @RequestMapping( value = "/wallet/{walletId}/coupons", method = RequestMethod.POST, headers = "Accept=application/json" )
+    public ResponseEntity<APIError<Wallet>> addNewCoupon( @RequestBody Payload<PurchasedCoupon> coupon, @PathVariable( name = "walletId" ) Long walletId )
+    {
+        APIError<Wallet> wallet = purchaseService.purchaseCoupon( ( PurchasedCoupon ) coupon.getPayload(), walletId );
         if( wallet._isSuccess() )
         {
             return ResponseEntity.
@@ -61,9 +83,9 @@ public class PurchaseServiceController
     }
 
     @RequestMapping( value = "/wallet/{walletId}/coupons/{couponId}", method = RequestMethod.PUT, headers = "Accept=application/json" )
-    public ResponseEntity<APIError<Wallet>> updateCoupon( @RequestBody PurchasedCoupon coupon, @PathVariable( name = "walletId" ) Long walletId, @PathVariable( name = "couponId" ) Long couponId )
+    public ResponseEntity<APIError<Wallet>> updateCoupon( @RequestBody Payload<PurchasedCoupon> coupon, @PathVariable( name = "walletId" ) Long walletId, @PathVariable( name = "couponId" ) Long couponId )
     {
-        APIError<Wallet> wallet = purchaseService.updateCoupon( coupon, walletId, couponId );
+        APIError<Wallet> wallet = purchaseService.updateCoupon( ( PurchasedCoupon ) coupon.getPayload(), walletId, couponId );
         if( wallet._isSuccess() )
         {
             return ResponseEntity.
@@ -117,6 +139,26 @@ public class PurchaseServiceController
                            status( HttpStatus.NOT_FOUND ).
                            headers( getResponseHeaders() ).
                            body( purchaseSummary );
+        }
+    }
+
+    @RequestMapping( value = "wallet/{walletId}/coupons/{couponId}/payments", method = RequestMethod.GET, headers = "Accept=application/json" )
+    public ResponseEntity<APIError<Payment>> getCouponPayment( @PathVariable( name = "walletId" ) Long walletId, @PathVariable( name = "couponId" ) Long couponId  )
+    {
+        APIError<Payment> purchaseCouponDetail = purchaseService.getDetailCouponPayments( walletId, couponId );
+        if( purchaseCouponDetail._isSuccess() )
+        {
+            return ResponseEntity.
+                           status( HttpStatus.OK ).
+                           headers( getResponseHeaders() ).
+                           body( purchaseCouponDetail );
+        }
+        else
+        {
+            return ResponseEntity.
+                           status( HttpStatus.NOT_FOUND ).
+                           headers( getResponseHeaders() ).
+                           body( purchaseCouponDetail );
         }
     }
 

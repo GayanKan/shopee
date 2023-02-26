@@ -156,4 +156,9 @@ public class PurchasedCouponData implements Serializable
     {
         this.valid = valid;
     }
+
+    public String  getCouponDetailLink( )
+    {
+        return "/purchase-service/wallet/"+ this.walletData.getWalletId() + "/coupons/" + this.id;
+    }
 }

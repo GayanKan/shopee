@@ -1,31 +1,16 @@
 package shopee.api.library;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import java.io.Serializable;
 import java.sql.Date;
 
-public class PurchaseCouponSummary
+public class PurchaseCouponSummary implements Serializable
 {
-    private Long id;
-
     private Date paidDate;
 
-    private float amount;
+    private double amount;
 
     public PurchaseCouponSummary()
     {
-    }
-
-    public Long getId()
-    {
-        return id;
-    }
-
-    public void setId( Long id )
-    {
-        this.id = id;
     }
 
     public Date getPaidDate()
@@ -38,12 +23,12 @@ public class PurchaseCouponSummary
         this.paidDate = paidDate;
     }
 
-    public float getAmount()
+    public double getAmount()
     {
         return amount;
     }
 
-    public void setAmount( float amount )
+    public void setAmount( double amount )
     {
         this.amount = amount;
     }

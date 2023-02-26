@@ -14,6 +14,9 @@ public class Coupon implements Serializable
 {
     private Long id;
     private String name;
+
+    private String currency;
+
     private double rate;
     private String termsAndConditions;
 
@@ -59,5 +62,15 @@ public class Coupon implements Serializable
     public void setTermsAndConditions( String termsAndConditions )
     {
         this.termsAndConditions = termsAndConditions;
+    }
+
+    public String getCurrency()
+    {
+        return currency;
+    }
+
+    public void setCurrency( String currency )
+    {
+        this.currency = currency;
     }
 }

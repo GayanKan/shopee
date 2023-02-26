@@ -13,8 +13,7 @@ public class HeaderUtil
     {
         //Create Headers
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set( "header1", "value1" );
-        responseHeaders.set( "header2", "value2" );
+        responseHeaders.set( "api_key", String.valueOf( "api_key".hashCode() ) );
         return responseHeaders;
     }
 }

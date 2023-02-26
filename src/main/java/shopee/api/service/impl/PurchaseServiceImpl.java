@@ -2,18 +2,17 @@ package shopee.api.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import shopee.api.data.CouponData;
+import shopee.api.data.PaymentData;
+import shopee.api.repository.PaymentDataRepository;
+import shopee.api.data.PurchasedCouponData;
 import shopee.api.data.WalletData;
-import shopee.api.library.Coupon;
+import shopee.api.library.Payment;
 import shopee.api.library.PurchaseCouponSummary;
 import shopee.api.library.PurchasedCoupon;
 import shopee.api.library.Wallet;
 import shopee.api.mapper.DataMapper;
+import shopee.api.repository.PurchasedCouponDataRepository;
 import shopee.api.repository.WalletDataRepository;
 import shopee.api.service.IPurchaseService;
 import shopee.api.util.APIError;
@@ -27,6 +26,11 @@ public class PurchaseServiceImpl implements IPurchaseService
 {
     @Autowired
     private WalletDataRepository walletDataRepository;
+    @Autowired
+    private PurchasedCouponDataRepository purchasedCouponDataRepository;
+    @Autowired
+    private PaymentDataRepository paymentDataRepository;
+
     @Override
     public APIError<Wallet> getDetailWallet( Long walletId )
     {
@@ -67,6 +71,59 @@ public class PurchaseServiceImpl implements IPurchaseService
     @Override
     public APIError<List<PurchaseCouponSummary>> getDetailPartnerPurchases( Long partnerId )
     {
-        return null;
+        APIError apiError = new APIError( APIError.SUCCESS, new Object(), "Success" );
+
+        List<PurchasedCouponData> couponData = purchasedCouponDataRepository.getPartnerPurchaseCoupons( partnerId );
+
+        if( couponData != null && !couponData.isEmpty() )
+        {
+            List<PurchaseCouponSummary> purchasedCoupons = DataMapper.dataMapper.mapPurchasedSummaryCoupons( couponData );
+            apiError.setData( purchasedCoupons );
+        }
+        else
+        {
+            apiError = new APIError( APIError.ERROR, null, "No Purchase Coupon Found for the given partner" );
+        }
+
+        return apiError;
+    }
+
+    @Override
+    public APIError<Payment> getDetailCouponPayments( Long walletId, Long purchasedCouponId )
+    {
+        APIError apiError = new APIError( APIError.SUCCESS, new Object(), "Success" );
+
+        Optional<PaymentData> paymentData = paymentDataRepository.getDetailCouponPayments( purchasedCouponId );
+
+        if( paymentData.isPresent() )
+        {
+            Payment purchasedCoupon = DataMapper.dataMapper.mapPayment( paymentData.get() );
+            apiError.setData( purchasedCoupon );
+        }
+        else
+        {
+            apiError = new APIError( APIError.ERROR, null, "No Payment Found for the given coupon id" );
+        }
+
+        return apiError;
+    }
+
+    public APIError<PurchasedCoupon> getPurchaseCouponDetail( Long walletId, Long couponId )
+    {
+        APIError apiError = new APIError( APIError.SUCCESS, new Object(), "Success" );
+
+        Optional<PurchasedCouponData> couponData = purchasedCouponDataRepository.findById( couponId );
+
+        if( couponData.isPresent() )
+        {
+            PurchasedCoupon purchasedCoupon = DataMapper.dataMapper.mapPurchasedCoupon( couponData.get() );
+            apiError.setData( purchasedCoupon );
+        }
+        else
+        {
+            apiError = new APIError( APIError.ERROR, null, "No Purchase Coupon Found for the given coupon id" );
+        }
+
+        return apiError;
     }
 }

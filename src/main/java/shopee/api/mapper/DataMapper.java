@@ -27,10 +27,14 @@ public abstract class DataMapper
     @Mapping( source = "purchasedCouponData", target = "purchasedCoupons" )
     public abstract Wallet mapWallet( WalletData walletData );
 
+    @Mapping(expression = "java(purchasedCoupon.getCouponDetailLink())", target = "qrCode")
     public abstract PurchasedCoupon mapPurchasedCoupon( PurchasedCouponData purchasedCoupon );
 
     public abstract List<PurchasedCoupon> mapPurchasedCoupons( List<PurchasedCouponData> purchasedCoupons );
 
+    public abstract Payment mapPayment( PaymentData paymentData );
+    @Mapping( source = "coupon.rate", target = "amount" )
+    public abstract PurchaseCouponSummary mapPurchasedSummaryCoupon( PurchasedCouponData couponData );
 
-
+    public abstract List<PurchaseCouponSummary> mapPurchasedSummaryCoupons( List<PurchasedCouponData> couponData );
 }

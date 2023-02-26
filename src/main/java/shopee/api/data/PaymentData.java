@@ -17,6 +17,8 @@ public class PaymentData implements Serializable
 
     private double paymentAmount;
 
+    private String currency;
+
     private String transactionReference;
 
     private String cardNumber; // after encrypting
