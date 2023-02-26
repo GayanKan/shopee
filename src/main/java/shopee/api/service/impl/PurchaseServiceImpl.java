@@ -4,13 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import shopee.api.data.PaymentData;
+import shopee.api.library.*;
 import shopee.api.repository.PaymentDataRepository;
 import shopee.api.data.PurchasedCouponData;
 import shopee.api.data.WalletData;
-import shopee.api.library.Payment;
-import shopee.api.library.PurchaseCouponSummary;
-import shopee.api.library.PurchasedCoupon;
-import shopee.api.library.Wallet;
 import shopee.api.mapper.DataMapper;
 import shopee.api.repository.PurchasedCouponDataRepository;
 import shopee.api.repository.WalletDataRepository;
@@ -51,8 +48,12 @@ public class PurchaseServiceImpl implements IPurchaseService
         return apiError;
     }
 
-    public APIError<Wallet> purchaseCoupon( PurchasedCoupon coupon, Long walletId )
+    public APIError<Wallet> purchaseCoupon( CouponPurchase coupon, Long walletId )
     {
+        APIError apiError = new APIError( APIError.SUCCESS, "Purchase coupon Success" );
+
+        PurchasedCouponData purchasedCouponData =  new PurchasedCouponData();
+        PaymentData paymentData =  new PaymentData();
         return null;
     }
 
@@ -65,7 +66,8 @@ public class PurchaseServiceImpl implements IPurchaseService
     @Override
     public APIError<Wallet> deleteCoupon( Long walletId, Long couponId )
     {
-        return null;
+        return new APIError( APIError.ERROR, null, "Coupon Delete Not Implemented" );
+
     }
 
     @Override

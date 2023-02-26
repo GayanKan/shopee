@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import shopee.api.library.Payment;
-import shopee.api.library.PurchaseCouponSummary;
-import shopee.api.library.PurchasedCoupon;
-import shopee.api.library.Wallet;
+import shopee.api.library.*;
 import shopee.api.service.impl.PurchaseServiceImpl;
 import shopee.api.util.APIError;
 import shopee.api.util.RequestWrapper;
@@ -63,9 +60,9 @@ public class PurchaseServiceController
     }
 
     @RequestMapping( value = "/wallet/{walletId}/coupons", method = RequestMethod.POST, headers = "Accept=application/json" )
-    public ResponseEntity<APIError<Wallet>> addNewCoupon( @RequestBody RequestWrapper<PurchasedCoupon> coupon, @PathVariable( name = "walletId" ) Long walletId )
+    public ResponseEntity<APIError<Wallet>> addNewCoupon( @RequestBody RequestWrapper<CouponPurchase> couponPurchase, @PathVariable( name = "walletId" ) Long walletId )
     {
-        APIError<Wallet> wallet = purchaseService.purchaseCoupon( ( PurchasedCoupon ) coupon.getPayload(), walletId );
+        APIError<Wallet> wallet = purchaseService.purchaseCoupon(  couponPurchase.getPayload(), walletId );
         if( wallet._isSuccess() )
         {
             return ResponseEntity.

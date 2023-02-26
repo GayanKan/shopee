@@ -26,11 +26,15 @@ public class PurchasedCouponData implements Serializable
     private float discountPercentage;
 
     // FK with User Profile M:1
+
+    private Long walletId;
+
     @MapsId( "walletId" )
     @ManyToOne( cascade = CascadeType.ALL )
     @JoinColumn( name = "walletId", referencedColumnName = "walletId" )
     private WalletData walletData;
 
+    private Long couponId;
     @MapsId( "couponId" )
     @ManyToOne( cascade = CascadeType.ALL )
     @JoinColumn( name = "couponId", referencedColumnName = "id" )
@@ -155,6 +159,36 @@ public class PurchasedCouponData implements Serializable
     public void setValid( boolean valid )
     {
         this.valid = valid;
+    }
+
+    public Long getWalletId()
+    {
+        return walletId;
+    }
+
+    public void setWalletId( Long walletId )
+    {
+        this.walletId = walletId;
+    }
+
+    public Long getCouponId()
+    {
+        return couponId;
+    }
+
+    public void setCouponId( Long couponId )
+    {
+        this.couponId = couponId;
+    }
+
+    public String getCurrency()
+    {
+        return currency;
+    }
+
+    public void setCurrency( String currency )
+    {
+        this.currency = currency;
     }
 
     public String  getCouponDetailLink( )
