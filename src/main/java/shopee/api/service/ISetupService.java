@@ -1,5 +1,6 @@
 package shopee.api.service;
 
+import shopee.api.data.CouponData;
 import shopee.api.library.Coupon;
 import shopee.api.library.Partner;
 import shopee.api.util.APIError;
@@ -10,9 +11,13 @@ public interface ISetupService
 {
     APIError<List<Coupon>> getAllCoupons();
 
-    APIError<List<Coupon>> addNewCoupon( Coupon coupon );
+    APIError<Coupon> getCoupon( Long couponId  );
 
-    APIError<List<Coupon>> updateCoupon( Coupon coupon, Long couponId );
+    APIError<CouponData> getCouponData( Long couponId  );
+
+    APIError<Coupon> addNewCoupon( Coupon coupon );
+
+    APIError<Coupon> updateCoupon( Coupon coupon, Long couponId );
 
     APIError deleteCoupon( Long couponId );
 
@@ -20,7 +25,7 @@ public interface ISetupService
 
     APIError<List<Partner>> getPartnerDetail( Long partnerId );
 
-    APIError<List<Partner>> addNewPartner( Coupon coupon );
+    APIError<Partner> addNewPartner( Partner partner );
 
     APIError<List<Partner>> updatePartner( Coupon coupon, Long couponId );
 

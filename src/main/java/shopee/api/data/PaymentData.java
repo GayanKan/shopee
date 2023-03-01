@@ -23,6 +23,8 @@ public class PaymentData implements Serializable
 
     private String cardNumber; // after encrypting
 
+    private Long purchasedCouponId;
+
     @MapsId("purchasedCouponId")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "purchasedCouponId", referencedColumnName = "id")
@@ -100,5 +102,25 @@ public class PaymentData implements Serializable
     public void setPurchasedCoupon( PurchasedCouponData purchasedCoupon )
     {
         this.purchasedCoupon = purchasedCoupon;
+    }
+
+    public String getCurrency()
+    {
+        return currency;
+    }
+
+    public void setCurrency( String currency )
+    {
+        this.currency = currency;
+    }
+
+    public Long getPurchasedCouponId()
+    {
+        return purchasedCouponId;
+    }
+
+    public void setPurchasedCouponId( Long purchasedCouponId )
+    {
+        this.purchasedCouponId = purchasedCouponId;
     }
 }

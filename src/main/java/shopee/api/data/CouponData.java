@@ -65,4 +65,14 @@ public class CouponData implements Serializable
     {
         this.termsAndConditions = termsAndConditions;
     }
+
+    public String getCurrency()
+    {
+        return currency;
+    }
+
+    public void setCurrency( String currency )
+    {
+        this.currency = currency;
+    }
 }

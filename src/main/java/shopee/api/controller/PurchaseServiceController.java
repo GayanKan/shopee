@@ -82,7 +82,7 @@ public class PurchaseServiceController
     @RequestMapping( value = "/wallet/{walletId}/coupons/{couponId}", method = RequestMethod.PUT, headers = "Accept=application/json" )
     public ResponseEntity<APIError<Wallet>> updateCoupon( @RequestBody RequestWrapper<PurchasedCoupon> coupon, @PathVariable( name = "walletId" ) Long walletId, @PathVariable( name = "couponId" ) Long couponId )
     {
-        APIError<Wallet> wallet = purchaseService.updateCoupon( ( PurchasedCoupon ) coupon.getPayload(), walletId, couponId );
+        APIError<Wallet> wallet = purchaseService.updateCoupon( coupon.getPayload(), walletId, couponId );
         if( wallet._isSuccess() )
         {
             return ResponseEntity.

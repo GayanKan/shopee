@@ -125,11 +125,17 @@ public class AdminServiceImpl implements IAdminService
     @Override
     public APIError login( LoginDetail loginDetail, String actions )
     {
-        APIError apiError = new APIError( APIError.SUCCESS, 1002, "Login Success" );
+        APIError apiError = new APIError( APIError.SUCCESS, 1, "Login Success" );
 
-
+        if( actions.equals( "LOGIN" ) )
+        {
+            // adding for testing only.
+            if( loginDetail.getUsername().equals( "gayankan" ) && !loginDetail.getPassword().equals( "gayan@321" ))
+            {
+                return new APIError( APIError.ERROR, -1, "Login Failed, Incorrect username or password" );
+            }
+        }
         // return user's profile id here, so can load the user profile from it.
-
 
         return apiError;
     }

@@ -3,6 +3,7 @@ package shopee.api.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import shopee.api.data.CouponData;
 import shopee.api.data.PaymentData;
 import shopee.api.library.*;
 import shopee.api.repository.PaymentDataRepository;
@@ -13,12 +14,15 @@ import shopee.api.repository.PurchasedCouponDataRepository;
 import shopee.api.repository.WalletDataRepository;
 import shopee.api.service.IPurchaseService;
 import shopee.api.util.APIError;
+import shopee.api.util.Validator;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Scope("prototype")
+@Scope( "prototype" )
 public class PurchaseServiceImpl implements IPurchaseService
 {
     @Autowired
@@ -27,6 +31,9 @@ public class PurchaseServiceImpl implements IPurchaseService
     private PurchasedCouponDataRepository purchasedCouponDataRepository;
     @Autowired
     private PaymentDataRepository paymentDataRepository;
+
+    @Autowired
+    private SetupServiceImpl setupService;
 
     @Override
     public APIError<Wallet> getDetailWallet( Long walletId )
@@ -52,9 +59,67 @@ public class PurchaseServiceImpl implements IPurchaseService
     {
         APIError apiError = new APIError( APIError.SUCCESS, "Purchase coupon Success" );
 
-        PurchasedCouponData purchasedCouponData =  new PurchasedCouponData();
-        PaymentData paymentData =  new PaymentData();
-        return null;
+        APIError validate = Validator.validatePurchaseCoupons( coupon );
+
+        if( validate._isSuccess() )
+        {
+            PurchasedCouponData purchasedCouponData = new PurchasedCouponData();
+
+            APIError<CouponData> couponDataError = setupService.getCouponData( coupon.getCoupon().getId() );
+            if( couponDataError._isError() )
+            {
+                apiError.setMsg( couponDataError.getMsg() );
+                return apiError;
+            }
+
+            Optional<WalletData> walletData = walletDataRepository.findById( walletId );
+            if( !walletData.isPresent() )
+            {
+                apiError.setMsg( "Incorrect User Wallet" );
+                return apiError;
+            }
+
+            CouponData couponData = ( CouponData ) couponDataError.getData();
+            purchasedCouponData.setCoupon( couponData );
+            purchasedCouponData.setCouponId( couponData.getId() );
+            purchasedCouponData.setRate( couponData.getRate() );
+
+            purchasedCouponData.setWalletId( walletId );
+            purchasedCouponData.setWalletData( walletData.get() );
+
+            purchasedCouponData.setPurchacedDate( new Date( System.currentTimeMillis() ) );
+
+            Date date = new Date( System.currentTimeMillis() );
+            LocalDate localDate = date.toLocalDate();
+            localDate.plusMonths( 3 );
+            purchasedCouponData.setExpiryDate( java.sql.Date.valueOf( localDate ) );
+
+
+            purchasedCouponData.setDiscountPercentage( 20 ); // TODO Need to take it from the discount pool
+            purchasedCouponData.setValid( true );
+            purchasedCouponData.setCurrency( "EUR" ); // TODO take this from the coupon
+
+            PurchasedCouponData purchasedCouponDataNew = purchasedCouponDataRepository.saveAndFlush( purchasedCouponData );
+
+            PaymentData paymentData = new PaymentData();
+            paymentData.setPaymentId( ( long ) -1 );
+            paymentData.setPaymentReference( "Test" );
+            paymentData.setTransactionReference( "Test" );
+            paymentData.setCurrency( coupon.getCoupon().getCurrency() );
+            paymentData.setPurchasedCouponId( purchasedCouponDataNew.getId() );
+            paymentData.setPurchasedCoupon( purchasedCouponDataNew );
+            paymentData.setPaymentAmount( couponData.getRate() );
+            paymentData.setPaymentGateway( coupon.getPaymentInfo().getGatewayInfo().getType() );
+            paymentData.setCardNumber( coupon.getPaymentInfo().getGatewayInfo().getCardNumber() ); // TODO need to encrypt this
+
+            paymentDataRepository.saveAndFlush( paymentData );
+
+            return getDetailWallet( walletId );
+        }
+        else
+        {
+            return validate;
+        }
     }
 
     @Override

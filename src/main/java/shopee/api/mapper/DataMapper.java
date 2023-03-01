@@ -21,6 +21,9 @@ public abstract class DataMapper
 
     public abstract Coupon mapCoupon( CouponData couponData );
 
+    @InheritInverseConfiguration
+    public abstract CouponData mapCouponDTOToDAO( Coupon coupon );
+
     public abstract List<Coupon> mapCoupons( List<CouponData> couponDataList );
 
     public abstract Partner mapPartner( PartnerData partnerData );

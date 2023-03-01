@@ -17,13 +17,13 @@ import java.rmi.RemoteException;
 import static shopee.api.util.HeaderUtil.getResponseHeaders;
 
 @RestController
-@RequestMapping("admin-service")
+@RequestMapping( "admin-service" )
 public class AdminServiceController
 {
     @Autowired
     private AdminServiceImpl adminService;
 
-    @RequestMapping( value = "/setup/user-profiles/{profileId}", method = RequestMethod.GET, headers = "Accept=application/json", produces = "application/json")
+    @RequestMapping( value = "/setup/user-profiles/{profileId}", method = RequestMethod.GET, headers = "Accept=application/json", produces = "application/json" )
     public ResponseEntity<APIError<Profile>> getProfileById( @PathVariable( name = "profileId" ) Long profileId ) throws RemoteException
     {
         APIError<Profile> profileData = adminService.getDetailUserProfile( profileId );
@@ -65,11 +65,12 @@ public class AdminServiceController
 
 
     }
+
     @RequestMapping( value = "/auth/user-logins", method = RequestMethod.POST, headers = "Accept=application/json" )
-    public ResponseEntity<APIError> userLogin( @RequestBody RequestWrapper<LoginDetail> loginDetail, @Parameter(description = "actions", required = true) @RequestParam String actions )
+    public ResponseEntity<APIError> userLogin( @RequestBody RequestWrapper<LoginDetail> loginDetail, @RequestParam( required = true ) String actions )
     {
         // from actions need to send followings -> LOG_OUT for logout, FORGOT for forget password
-        APIError loginMsg = adminService.login( ( LoginDetail ) loginDetail.getPayload(), actions );
+        APIError loginMsg = adminService.login( loginDetail.getPayload(), actions );
 
         if( loginMsg._isSuccess() )
         {
