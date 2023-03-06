@@ -87,12 +87,13 @@ public class PurchaseServiceImpl implements IPurchaseService
             purchasedCouponData.setWalletId( walletId );
             purchasedCouponData.setWalletData( walletData.get() );
 
-            purchasedCouponData.setPurchacedDate( new Date( System.currentTimeMillis() ) );
+            purchasedCouponData.setPurchasedDate( new Date( System.currentTimeMillis() ) );
 
             Date date = new Date( System.currentTimeMillis() );
             LocalDate localDate = date.toLocalDate();
-                localDate.plusMonths( 3 );
-            purchasedCouponData.setExpiryDate( java.sql.Date.valueOf( localDate ) );
+            LocalDate newDate = localDate.plusMonths( 3L ); // TODO to configure
+
+            purchasedCouponData.setExpiryDate( java.sql.Date.valueOf( newDate ) );
 
             purchasedCouponData.setDiscountPercentage( 20 ); // TODO Need to take it from the discount pool
             purchasedCouponData.setValid( true );
@@ -159,13 +160,13 @@ public class PurchaseServiceImpl implements IPurchaseService
             PurchasedCouponData purchasedCouponDataUpdate = purchasedCouponData.get();
             if( purchasedCouponDataUpdate.isPaid() )
             {
-                apiError.setMsg( "Coupon is already used for a payment");
+                apiError.setMsg( "Coupon is already used for a payment" );
                 apiError.setNo( APIError.ERROR );
                 return apiError;
             }
             else if( !purchasedCouponDataUpdate.isValid() )
             {
-                apiError.setMsg( "Coupon is not valid");
+                apiError.setMsg( "Coupon is not valid" );
                 apiError.setNo( APIError.ERROR );
                 return apiError;
             }
@@ -177,6 +178,12 @@ public class PurchaseServiceImpl implements IPurchaseService
 
             PurchasedCouponData purchasedCouponDataNew = purchasedCouponDataRepository.saveAndFlush( purchasedCouponDataUpdate );
             PurchasedCoupon purchasedCouponNew = DataMapper.dataMapper.mapPurchasedCoupon( purchasedCouponDataNew );
+
+            WalletData walletDataUpdate = walletData.get();
+
+            double discountBalance = purchasedCouponDataUpdate.getRate() * ( purchasedCouponDataUpdate.getDiscountPercentage() / 100 );
+            walletDataUpdate.setBalance( walletDataUpdate.getBalance() + discountBalance );
+            walletDataRepository.saveAndFlush( walletDataUpdate );
 
             return new APIError( APIError.SUCCESS, purchasedCouponNew, "Success" );
 

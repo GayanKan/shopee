@@ -35,6 +35,7 @@ public abstract class DataMapper
     public abstract Wallet mapWallet( WalletData walletData );
 
     @Mapping(expression = "java(purchasedCoupon.getCouponDetailLink())", target = "qrCode")
+    @Mapping( source = "rate", target = "purchasedValue" )
     public abstract PurchasedCoupon mapPurchasedCoupon( PurchasedCouponData purchasedCoupon );
 
     public abstract List<PurchasedCoupon> mapPurchasedCoupons( List<PurchasedCouponData> purchasedCoupons );

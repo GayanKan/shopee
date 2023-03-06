@@ -8,7 +8,7 @@ public class PurchasedCoupon implements Serializable
 {
     private Long id;
 
-    private float discountRate;
+    private float purchasedValue;
 
     private Date expiryDate;
 
@@ -39,14 +39,14 @@ public class PurchasedCoupon implements Serializable
         this.id = id;
     }
 
-    public float getDiscountRate()
+    public float getPurchasedValue()
     {
-        return discountRate;
+        return purchasedValue;
     }
 
-    public void setDiscountRate( float discountRate )
+    public void setPurchasedValue( float purchasedValue )
     {
-        this.discountRate = discountRate;
+        this.purchasedValue = purchasedValue;
     }
 
     public Date getExpiryDate()
