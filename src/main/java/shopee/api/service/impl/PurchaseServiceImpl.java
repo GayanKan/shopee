@@ -57,9 +57,9 @@ public class PurchaseServiceImpl implements IPurchaseService
 
     public APIError<Wallet> purchaseCoupon( CouponPurchase coupon, Long walletId )
     {
-        APIError apiError = new APIError( APIError.SUCCESS, "Purchase coupon Success" );
+        APIError<Wallet> apiError = new APIError( APIError.SUCCESS, "Purchase coupon Success" );
 
-        APIError validate = Validator.validatePurchaseCoupons( coupon );
+        APIError<Wallet> validate = Validator.validatePurchaseCoupons( coupon );
 
         if( validate._isSuccess() )
         {
@@ -91,9 +91,8 @@ public class PurchaseServiceImpl implements IPurchaseService
 
             Date date = new Date( System.currentTimeMillis() );
             LocalDate localDate = date.toLocalDate();
-            localDate.plusMonths( 3 );
+                localDate.plusMonths( 3 );
             purchasedCouponData.setExpiryDate( java.sql.Date.valueOf( localDate ) );
-
 
             purchasedCouponData.setDiscountPercentage( 20 ); // TODO Need to take it from the discount pool
             purchasedCouponData.setValid( true );
@@ -101,6 +100,7 @@ public class PurchaseServiceImpl implements IPurchaseService
 
             PurchasedCouponData purchasedCouponDataNew = purchasedCouponDataRepository.saveAndFlush( purchasedCouponData );
 
+            // Save CC payment
             PaymentData paymentData = new PaymentData();
             paymentData.setPaymentId( ( long ) -1 );
             paymentData.setPaymentReference( "Test" );
@@ -123,9 +123,64 @@ public class PurchaseServiceImpl implements IPurchaseService
     }
 
     @Override
-    public APIError<Wallet> updateCoupon( PurchasedCoupon coupon, Long walletId, Long couponId )
+    public APIError<PurchasedCoupon> updateCoupon( PurchasedCoupon coupon, Long walletId, Long couponId, Long partnerProfileId )
     {
-        return null;
+        APIError<PurchasedCoupon> apiError = new APIError( APIError.SUCCESS, "Success" );
+
+        // Validate CouponData
+        APIError<CouponData> couponDataError = setupService.getCouponData( coupon.getCoupon().getId() );
+        if( couponDataError._isError() )
+        {
+            apiError.setMsg( couponDataError.getMsg() );
+            apiError.setNo( APIError.ERROR );
+            return apiError;
+        }
+
+        //Validate Wallet
+        Optional<WalletData> walletData = walletDataRepository.findById( walletId );
+        if( walletData.isEmpty() )
+        {
+            apiError.setMsg( "Incorrect User Wallet" );
+            apiError.setNo( APIError.ERROR );
+            return apiError;
+        }
+
+        // Validate Purchase Coupon
+        Optional<PurchasedCouponData> purchasedCouponData = purchasedCouponDataRepository.findById( couponId );
+
+        if( purchasedCouponData.isEmpty() )
+        {
+            apiError.setMsg( "Incorrect Purchase Coupon" );
+            apiError.setNo( APIError.ERROR );
+            return apiError;
+        }
+        else
+        {
+            PurchasedCouponData purchasedCouponDataUpdate = purchasedCouponData.get();
+            if( purchasedCouponDataUpdate.isPaid() )
+            {
+                apiError.setMsg( "Coupon is already used for a payment");
+                apiError.setNo( APIError.ERROR );
+                return apiError;
+            }
+            else if( !purchasedCouponDataUpdate.isValid() )
+            {
+                apiError.setMsg( "Coupon is not valid");
+                apiError.setNo( APIError.ERROR );
+                return apiError;
+            }
+
+            purchasedCouponDataUpdate.setValid( false );
+            purchasedCouponDataUpdate.setPaid( true );
+            purchasedCouponDataUpdate.setPaidDate( new Date( System.currentTimeMillis() ) );
+            purchasedCouponDataUpdate.setPartnerProfileId( partnerProfileId );
+
+            PurchasedCouponData purchasedCouponDataNew = purchasedCouponDataRepository.saveAndFlush( purchasedCouponDataUpdate );
+            PurchasedCoupon purchasedCouponNew = DataMapper.dataMapper.mapPurchasedCoupon( purchasedCouponDataNew );
+
+            return new APIError( APIError.SUCCESS, purchasedCouponNew, "Success" );
+
+        }
     }
 
     @Override

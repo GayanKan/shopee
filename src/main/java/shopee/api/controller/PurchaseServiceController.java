@@ -1,6 +1,7 @@
 package shopee.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -80,22 +81,22 @@ public class PurchaseServiceController
     }
 
     @RequestMapping( value = "/wallet/{walletId}/coupons/{couponId}", method = RequestMethod.PUT, headers = "Accept=application/json" )
-    public ResponseEntity<APIError<Wallet>> updateCoupon( @RequestBody RequestWrapper<PurchasedCoupon> coupon, @PathVariable( name = "walletId" ) Long walletId, @PathVariable( name = "couponId" ) Long couponId )
+    public ResponseEntity<APIError<PurchasedCoupon>> updateCoupon( @RequestBody RequestWrapper<PurchasedCoupon> coupon, @PathVariable( name = "walletId" ) Long walletId, @PathVariable( name = "couponId" ) Long couponId, @RequestHeader(value = "partner-profile-id") Long partnerProfileId )
     {
-        APIError<Wallet> wallet = purchaseService.updateCoupon( coupon.getPayload(), walletId, couponId );
-        if( wallet._isSuccess() )
+        APIError<PurchasedCoupon> updateCoupon = purchaseService.updateCoupon( coupon.getPayload(), walletId, couponId, partnerProfileId );
+        if( updateCoupon._isSuccess() )
         {
             return ResponseEntity.
                            status( HttpStatus.OK ).
                            headers( getResponseHeaders() ).
-                           body( wallet );
+                           body( updateCoupon );
         }
         else
         {
             return ResponseEntity.
                            status( HttpStatus.NOT_FOUND ).
                            headers( getResponseHeaders() ).
-                           body( wallet );
+                           body( updateCoupon );
         }
     }
 

@@ -46,6 +46,8 @@ public class PurchasedCouponData implements Serializable
 
     private String currency;
 
+    private Long partnerProfileId;
+
 
     public PurchasedCouponData()
     {
@@ -189,6 +191,16 @@ public class PurchasedCouponData implements Serializable
     public void setCurrency( String currency )
     {
         this.currency = currency;
+    }
+
+    public Long getPartnerProfileId()
+    {
+        return partnerProfileId;
+    }
+
+    public void setPartnerProfileId( Long partnerProfileId )
+    {
+        this.partnerProfileId = partnerProfileId;
     }
 
     public String  getCouponDetailLink( )

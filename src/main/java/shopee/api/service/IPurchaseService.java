@@ -11,7 +11,7 @@ public interface IPurchaseService
 
     public APIError<Wallet> purchaseCoupon( CouponPurchase coupon, Long walletId );
 
-    APIError<Wallet> updateCoupon( PurchasedCoupon coupon, Long walletId, Long couponId );
+    APIError<PurchasedCoupon> updateCoupon( PurchasedCoupon coupon, Long walletId, Long couponId, Long partnerProfileId );
 
     APIError<Wallet> deleteCoupon( Long walletId, Long couponId );
 

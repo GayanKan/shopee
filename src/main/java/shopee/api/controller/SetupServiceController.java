@@ -85,6 +85,27 @@ public class SetupServiceController
 
     }
 
+    @RequestMapping( value = "/setup/list-partners", method = RequestMethod.POST, headers = "Accept=application/json" )
+    public ResponseEntity<APIError<List<Partner>>> addPartners( @RequestBody RequestWrapper<List<Partner>> profile )
+    {
+       APIError<List<Partner>>  newProfile = setupService.addNewPartners( profile.getPayload() );
+
+        if( newProfile._isSuccess() )
+        {
+            return ResponseEntity.
+                           status( HttpStatus.CREATED ).
+                           headers( getResponseHeaders() ).
+                           body( newProfile );
+        }
+        else
+        {
+            return ResponseEntity.
+                           status( HttpStatus.INTERNAL_SERVER_ERROR ).
+                           headers( getResponseHeaders() ).
+                           body( newProfile );
+        }
+    }
+
     @RequestMapping( value = "/setup/coupons", method = RequestMethod.POST, headers = "Accept=application/json" )
     public ResponseEntity<APIError<Coupon>> addCoupon( @RequestBody RequestWrapper<Coupon> coupon )
     {

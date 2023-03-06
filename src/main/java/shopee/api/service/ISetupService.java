@@ -27,6 +27,8 @@ public interface ISetupService
 
     APIError<Partner> addNewPartner( Partner partner );
 
+    public APIError<List<Partner>> addNewPartners( List<Partner> payload );
+
     APIError<List<Partner>> updatePartner( Coupon coupon, Long couponId );
 
     APIError deletePartner( Long couponId );

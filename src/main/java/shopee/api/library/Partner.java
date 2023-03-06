@@ -9,8 +9,9 @@ public class Partner implements Serializable
 
     private String legalName;
     private String marketingName;
-
     private String address;
+
+    private String category; // Can be RETAIL, GLOSSARY, RESTAURANT, CLOTHS
 
     private Profile partnerProfile;
 
@@ -66,6 +67,16 @@ public class Partner implements Serializable
     public void setPartnerProfile( Profile partnerProfile )
     {
         this.partnerProfile = partnerProfile;
+    }
+
+    public String getCategory()
+    {
+        return category;
+    }
+
+    public void setCategory( String category )
+    {
+        this.category = category;
     }
 }
 

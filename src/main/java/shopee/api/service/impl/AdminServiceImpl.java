@@ -5,8 +5,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopee.api.data.WalletData;
-import shopee.api.library.LoginDetail;
-import shopee.api.library.Profile;
+import shopee.api.library.*;
 import shopee.api.mapper.DataMapper;
 import shopee.api.repository.ProfileDataRepository;
 import shopee.api.repository.ProfileRepository;
@@ -15,6 +14,7 @@ import shopee.api.service.IAdminService;
 import shopee.api.data.ProfileData;
 import shopee.api.util.APIError;
 import shopee.api.util.UserProfileValidator;
+import shopee.api.util.Validator;
 
 import java.util.Optional;
 
@@ -52,6 +52,7 @@ public class AdminServiceImpl implements IAdminService
         return apiError;
     }
 
+
     public APIError<Profile> addNewProfile( Profile profile )
     {
         APIError apiError = new APIError( APIError.SUCCESS, "Add new Profile Success" );
@@ -63,7 +64,7 @@ public class AdminServiceImpl implements IAdminService
             if( error._isSuccess() )
             {
                 ProfileData profileData = DataMapper.dataMapper.mapProfileDTOToDAO( profile );
-                profileData.setUserAuthKey( "" ); // TODO Need to Encrypt
+                profileData.setUserAuthKey( profile.getUserAuthKey() == null ? "" : profile.getUserAuthKey() ); // TODO Need to Encrypt
                 ProfileData profileDataNew = profileDataRepository.saveAndFlush( profileData );
 
                 WalletData walletData = new WalletData();
@@ -80,11 +81,13 @@ public class AdminServiceImpl implements IAdminService
             }
             else
             {
+                apiError.setNo( APIError.ERROR );
                 apiError.setMsg( error.getMsg() );
             }
         }
         else
         {
+            apiError.setNo( APIError.ERROR );
             apiError.setMsg( error.getMsg() );
         }
 
@@ -123,19 +126,43 @@ public class AdminServiceImpl implements IAdminService
     }
 
     @Override
-    public APIError login( LoginDetail loginDetail, String actions )
+    public APIError<LoginSummary> login( LoginDetail loginDetail, String actions )
     {
-        APIError apiError = new APIError( APIError.SUCCESS, 1, "Login Success" );
+        APIError<LoginSummary> apiError = new APIError( APIError.SUCCESS, null, "Login Success" );
+        ProfileData profileData = null;
 
-        if( actions.equals( "LOGIN" ) )
+        if( loginDetail == null || Validator.isNullOrEmpty( loginDetail.getUsername() ) || Validator.isNullOrEmpty( loginDetail.getPassword() ) )
         {
-            // adding for testing only.
-            if( loginDetail.getUsername().equals( "gayankan" ) && !loginDetail.getPassword().equals( "gayan@321" ))
+            return new APIError( APIError.ERROR, -1, "Login Failed, Incorrect username or password" );
+        }
+        else
+        {
+            Optional<ProfileData> profileDataOpt = profileDataRepository.findByUserName( loginDetail.getUsername() );
+
+            if( profileDataOpt.isPresent() )
+            {
+                profileData = profileDataOpt.get();
+            }
+            else
             {
                 return new APIError( APIError.ERROR, -1, "Login Failed, Incorrect username or password" );
             }
         }
-        // return user's profile id here, so can load the user profile from it.
+
+        if( actions.equals( "LOGIN" ) )
+        {
+            //TODO use Spring Security to encrypt and validate.
+            if( loginDetail.getUsername().equals( profileData.getUserName() ) && loginDetail.getPassword().equals( profileData.getUserAuthKey() ) )
+            {
+                LoginSummary loginSummary = new LoginSummary( profileData.getProfileId(), profileData.getCategory() );
+
+                apiError = new APIError( APIError.SUCCESS, loginSummary, "Login Success" );
+            }
+            else
+            {
+                return new APIError( APIError.ERROR, -1, "Login Failed, Incorrect username or password" );
+            }
+        }
 
         return apiError;
     }

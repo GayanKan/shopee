@@ -10,8 +10,8 @@ import java.util.Optional;
 public interface PurchasedCouponDataRepository extends JpaRepository<PurchasedCouponData,Long>
 {
     @Query(
-            value = "SELECT PCD.* FROM WALLET_DATA WD, PURCHASED_COUPON_DATA PCD " +
-                            "WHERE WD.PROFILE_ID = ?1 AND PCD.WALLET_ID = WD.WALLET_ID ",
+            value = "SELECT PCD.* FROM PURCHASED_COUPON_DATA PCD " +
+                            "WHERE PCD.PARTNER_PROFILE_ID = ?1 ",
             nativeQuery = true )
     List<PurchasedCouponData> getPartnerPurchaseCoupons( Long partnerId );
 }

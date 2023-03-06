@@ -12,11 +12,15 @@ import shopee.api.data.CouponDataRepository;
 import shopee.api.data.PartnerData;
 import shopee.api.library.Coupon;
 import shopee.api.library.Partner;
+import shopee.api.library.Profile;
 import shopee.api.mapper.DataMapper;
 import shopee.api.repository.CouponRepository;
 import shopee.api.repository.PartnerRepository;
 import shopee.api.service.ISetupService;
 import shopee.api.util.APIError;
+import shopee.api.util.Validator;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +35,8 @@ public class SetupServiceImpl implements ISetupService
     private PartnerRepository partnerRepository;
     @Autowired
     private CouponDataRepository couponDataRepository;
+    @Autowired
+    private AdminServiceImpl adminService;
 
     @Override
     public APIError<List<Coupon>> getAllCoupons()
@@ -97,7 +103,7 @@ public class SetupServiceImpl implements ISetupService
     @Override
     public APIError<Coupon> addNewCoupon( Coupon coupon )
     {
-        CouponData couponData = DataMapper.dataMapper.mapCouponDTOToDAO( coupon  );
+        CouponData couponData = DataMapper.dataMapper.mapCouponDTOToDAO( coupon );
         couponData.setCurrency( "EUR" );
         CouponData couponDataNew = couponDataRepository.save( couponData );
         return new APIError( APIError.SUCCESS, DataMapper.dataMapper.mapCoupon( couponDataNew ), "Success" );
@@ -145,8 +151,67 @@ public class SetupServiceImpl implements ISetupService
     @Override
     public APIError<Partner> addNewPartner( Partner partner )
     {
-        return null;
+        if( partner.getPartnerProfile() == null )
+        {
+            return new APIError( APIError.ERROR, null, "Partner Profile is Not Found" );
+        }
+        else if( Validator.isNullOrEmpty( partner.getLegalName() ) )
+        {
+            return new APIError( APIError.ERROR, null, "Partner Legal Name Cannot be Empty" );
+        }
+        else if( Validator.isNullOrEmpty( partner.getMarketingName() ) )
+        {
+            return new APIError( APIError.ERROR, null, "Partner Marketing Name Cannot be Empty" );
+        }
+        APIError<Profile> profileNew = adminService.addNewProfile( partner.getPartnerProfile() );
+
+        if( profileNew._isSuccess() )
+        {
+            PartnerData partnerData = DataMapper.dataMapper.mapPartnerDTOToDAO( partner );
+            partnerData.setProfileId( ( ( Profile ) profileNew.getData() ).getProfileId() );
+            partnerData.getPartnerProfile().setProfileId( ( ( Profile ) profileNew.getData() ).getProfileId() );
+            PartnerData partnerDataNew = partnerRepository.saveAndFlush( partnerData );
+
+            Partner partnerNew = DataMapper.dataMapper.mapPartner( partnerDataNew );
+
+            return new APIError( APIError.SUCCESS, partnerNew, "Partner Creation Success" );
+        }
+        else
+        {
+            return new APIError( APIError.ERROR, null, " Error Creating Partner " + partner.getLegalName() + " Error = " +  profileNew.getMsg() );
+
+        }
     }
+
+    @Override
+    public APIError<List<Partner>> addNewPartners( List<Partner> partnerList )
+    {
+        if( partnerList == null || partnerList.isEmpty() )
+        {
+            return new APIError( APIError.ERROR, null, "PartnerList is Not Found" );
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        List<Partner> newPartners = new ArrayList<>();
+
+        for( Partner partner : partnerList )
+        {
+            APIError<Partner> newPartner = addNewPartner( partner );
+            if( newPartner._isSuccess() )
+            {
+                newPartners.add( ( Partner ) newPartner.getData() );
+            }
+            else
+            {
+                stringBuilder.append( newPartner.getMsg() );
+                stringBuilder.append( " " );
+            }
+        }
+
+
+        return new APIError( APIError.SUCCESS, newPartners, " Partner List Created Status = " + stringBuilder );
+    }
+
 
     @Override
     public APIError<List<Partner>> updatePartner( Coupon coupon, Long couponId )

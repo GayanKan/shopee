@@ -19,7 +19,11 @@ public class PartnerData implements Serializable
     @Column( nullable = false )
     private String address;
 
+    private String category; // Can be RETAIL, GLOSSARY, RESTAURANT, CLOTHS
+
     // FK with User Profile 1:1
+    private Long profileId;
+
     @MapsId( "profileId" )
     @ManyToOne( cascade = CascadeType.ALL )
     @JoinColumn( name = "profileId", referencedColumnName = "profileId" )
@@ -77,6 +81,26 @@ public class PartnerData implements Serializable
     public void setPartnerProfile( ProfileData partnerProfile )
     {
         this.partnerProfile = partnerProfile;
+    }
+
+    public Long getProfileId()
+    {
+        return profileId;
+    }
+
+    public void setProfileId( Long profileId )
+    {
+        this.profileId = profileId;
+    }
+
+    public String getCategory()
+    {
+        return category;
+    }
+
+    public void setCategory( String category )
+    {
+        this.category = category;
     }
 }
 

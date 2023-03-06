@@ -1,12 +1,12 @@
 package shopee.api.controller;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shopee.api.library.LoginDetail;
+import shopee.api.library.LoginSummary;
 import shopee.api.library.Profile;
 import shopee.api.service.impl.AdminServiceImpl;
 import shopee.api.util.APIError;
@@ -67,15 +67,15 @@ public class AdminServiceController
     }
 
     @RequestMapping( value = "/auth/user-logins", method = RequestMethod.POST, headers = "Accept=application/json" )
-    public ResponseEntity<APIError> userLogin( @RequestBody RequestWrapper<LoginDetail> loginDetail, @RequestParam( required = true ) String actions )
+    public ResponseEntity<APIError<LoginSummary>> userLogin( @RequestBody RequestWrapper<LoginDetail> loginDetail, @RequestParam( required = true ) String actions )
     {
         // from actions need to send followings -> LOG_OUT for logout, FORGOT for forget password
-        APIError loginMsg = adminService.login( loginDetail.getPayload(), actions );
+        APIError<LoginSummary> loginMsg = adminService.login( loginDetail.getPayload(), actions );
 
         if( loginMsg._isSuccess() )
         {
             return ResponseEntity.
-                           status( HttpStatus.CREATED ).
+                           status( HttpStatus.OK ).
                            headers( getResponseHeaders() ).
                            body( loginMsg );
         }
@@ -97,7 +97,7 @@ public class AdminServiceController
         if( newProfile._isSuccess() )
         {
             return ResponseEntity.
-                           status( HttpStatus.CREATED ).
+                           status( HttpStatus.OK ).
                            headers( getResponseHeaders() ).
                            body( newProfile );
         }

@@ -1,8 +1,9 @@
 package shopee.api.service;
 
-import shopee.api.library.LoginDetail;
-import shopee.api.library.Profile;
+import shopee.api.library.*;
 import shopee.api.util.APIError;
+
+import java.util.List;
 
 public interface IAdminService
 {
@@ -14,5 +15,6 @@ public interface IAdminService
 
     public APIError deleteProfile( Long profileId );
 
-    APIError login( LoginDetail loginDetail, String actions );
+    APIError<LoginSummary> login( LoginDetail loginDetail, String actions );
+
 }

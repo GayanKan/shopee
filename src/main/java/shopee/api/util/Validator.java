@@ -2,11 +2,12 @@ package shopee.api.util;
 
 import shopee.api.library.CouponPurchase;
 import shopee.api.library.ProfileCategory;
+import shopee.api.library.Wallet;
 
 
 public class Validator
 {
-    public static APIError validatePurchaseCoupons( CouponPurchase coupon )
+    public static APIError<Wallet> validatePurchaseCoupons( CouponPurchase coupon )
     {
         if( coupon == null || coupon.getCoupon() == null || coupon.getPaymentInfo() == null )
         {
@@ -29,7 +30,7 @@ public class Validator
 
     }
 
-    private static boolean isNullOrEmpty( String value )
+    public static boolean isNullOrEmpty( String value )
     {
         if( value == null || value.isEmpty() )
         {

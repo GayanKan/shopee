@@ -28,6 +28,8 @@ public abstract class DataMapper
 
     public abstract Partner mapPartner( PartnerData partnerData );
     public abstract List<Partner> mapPartners( List<PartnerData> partnerDataList );
+    @InheritInverseConfiguration
+    public abstract PartnerData mapPartnerDTOToDAO( Partner partnerData );
 
     @Mapping( source = "purchasedCouponData", target = "purchasedCoupons" )
     public abstract Wallet mapWallet( WalletData walletData );
