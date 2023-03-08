@@ -18,8 +18,10 @@ import shopee.api.util.Validator;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @Scope( "prototype" )
@@ -49,7 +51,7 @@ public class PurchaseServiceImpl implements IPurchaseService
         }
         else
         {
-            apiError = new APIError( APIError.ERROR, null, "No Wallet Found for the given wallet id" );
+            apiError = new APIError( APIError.ERROR, null, "No Wallet found for the given wallet id" );
         }
 
         return apiError;
@@ -57,7 +59,7 @@ public class PurchaseServiceImpl implements IPurchaseService
 
     public APIError<Wallet> purchaseCoupon( CouponPurchase coupon, Long walletId )
     {
-        APIError<Wallet> apiError = new APIError( APIError.SUCCESS, "Purchase coupon Success" );
+        APIError<Wallet> apiError = new APIError( APIError.SUCCESS, "Purchase coupon success" );
 
         APIError<Wallet> validate = Validator.validatePurchaseCoupons( coupon );
 
@@ -95,7 +97,7 @@ public class PurchaseServiceImpl implements IPurchaseService
 
             purchasedCouponData.setExpiryDate( java.sql.Date.valueOf( newDate ) );
 
-            purchasedCouponData.setDiscountPercentage( 20 ); // TODO Need to take it from the discount pool
+            purchasedCouponData.setDiscountPercentage( this.getDiscountPercentage( couponData.getRate() ) ); // TODO Need to take it from the discount pool
             purchasedCouponData.setValid( true );
             purchasedCouponData.setCurrency( "EUR" ); // TODO take this from the coupon
 
@@ -104,8 +106,8 @@ public class PurchaseServiceImpl implements IPurchaseService
             // Save CC payment
             PaymentData paymentData = new PaymentData();
             paymentData.setPaymentId( ( long ) -1 );
-            paymentData.setPaymentReference( "Test" );
-            paymentData.setTransactionReference( "Test" );
+            paymentData.setPaymentReference( "test-payment-gateway" );
+            paymentData.setTransactionReference( "test-payment-reference" );
             paymentData.setCurrency( coupon.getCoupon().getCurrency() );
             paymentData.setPurchasedCouponId( purchasedCouponDataNew.getId() );
             paymentData.setPurchasedCoupon( purchasedCouponDataNew );
@@ -123,10 +125,17 @@ public class PurchaseServiceImpl implements IPurchaseService
         }
     }
 
+    private float getDiscountPercentage( float rate )
+    {
+        List<Integer> givenList = Arrays.asList( 5, 10, 15, 20, 25, 30, 40, 45, 50, 60, 70, 75, 90, 100 );
+        Random rand = new Random();
+        return givenList.get( rand.nextInt( givenList.size() ) );
+    }
+
     @Override
     public APIError<PurchasedCoupon> updateCoupon( PurchasedCoupon coupon, Long walletId, Long couponId, Long partnerProfileId )
     {
-        APIError<PurchasedCoupon> apiError = new APIError( APIError.SUCCESS, "Success" );
+        APIError<PurchasedCoupon> apiError = new APIError( APIError.SUCCESS, "Successfully redeemed the coupon" );
 
         // Validate CouponData
         APIError<CouponData> couponDataError = setupService.getCouponData( coupon.getCoupon().getId() );
@@ -160,7 +169,7 @@ public class PurchaseServiceImpl implements IPurchaseService
             PurchasedCouponData purchasedCouponDataUpdate = purchasedCouponData.get();
             if( purchasedCouponDataUpdate.isPaid() )
             {
-                apiError.setMsg( "Coupon is already used for a payment" );
+                apiError.setMsg( "Coupon is already redeemed. Please select another coupon" );
                 apiError.setNo( APIError.ERROR );
                 return apiError;
             }
@@ -185,7 +194,7 @@ public class PurchaseServiceImpl implements IPurchaseService
             walletDataUpdate.setBalance( walletDataUpdate.getBalance() + discountBalance );
             walletDataRepository.saveAndFlush( walletDataUpdate );
 
-            return new APIError( APIError.SUCCESS, purchasedCouponNew, "Success" );
+            return new APIError( APIError.SUCCESS, purchasedCouponNew, "Successfully redeemed the coupon" );
 
         }
     }
@@ -193,7 +202,7 @@ public class PurchaseServiceImpl implements IPurchaseService
     @Override
     public APIError<Wallet> deleteCoupon( Long walletId, Long couponId )
     {
-        return new APIError( APIError.ERROR, null, "Coupon Delete Not Implemented" );
+        return new APIError( APIError.ERROR, null, "Coupon Delete Not Supported" );
 
     }
 
@@ -211,7 +220,7 @@ public class PurchaseServiceImpl implements IPurchaseService
         }
         else
         {
-            apiError = new APIError( APIError.ERROR, null, "No Purchase Coupon Found for the given partner" );
+            apiError = new APIError( APIError.ERROR, null, "No purchased coupons found for the given partner" );
         }
 
         return apiError;
@@ -226,12 +235,12 @@ public class PurchaseServiceImpl implements IPurchaseService
 
         if( paymentData.isPresent() )
         {
-            Payment purchasedCoupon = DataMapper.dataMapper.mapPayment( paymentData.get() );
-            apiError.setData( purchasedCoupon );
+            Payment payment = DataMapper.dataMapper.mapPayment( paymentData.get() );
+            apiError.setData( payment );
         }
         else
         {
-            apiError = new APIError( APIError.ERROR, null, "No Payment Found for the given coupon id" );
+            apiError = new APIError( APIError.ERROR, null, "No payment found for the given coupon id" );
         }
 
         return apiError;
@@ -246,11 +255,27 @@ public class PurchaseServiceImpl implements IPurchaseService
         if( couponData.isPresent() )
         {
             PurchasedCoupon purchasedCoupon = DataMapper.dataMapper.mapPurchasedCoupon( couponData.get() );
-            apiError.setData( purchasedCoupon );
+            if( purchasedCoupon.isPaid() )
+            {
+                apiError.setMsg( "This coupon is already redeemed. Please select another coupon" );
+                apiError.setNo( APIError.ERROR );
+                apiError.setData( purchasedCoupon );
+            }
+            else if( !purchasedCoupon.isValid() )
+            {
+                apiError.setMsg( "This coupon is not valid to redeem. Please select another coupon" );
+                apiError.setNo( APIError.ERROR );
+                apiError.setData( purchasedCoupon );
+            }
+            else
+            {
+                apiError.setData( purchasedCoupon );
+            }
+
         }
         else
         {
-            apiError = new APIError( APIError.ERROR, null, "No Purchase Coupon Found for the given coupon id" );
+            apiError = new APIError( APIError.ERROR, null, "No purchased coupon found for the given coupon id" );
         }
 
         return apiError;
